@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OTP Desk — Gmail Dashboard</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1020;--panel:#111a2e;--panel2:#0e1729;--line:#26334d;--text:#eef3ff;--muted:#98a7c2;--accent:#7c9cff;--green:#54d6a0;--amber:#ffc66d;--red:#ff7d8d}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(1000px 500px at 10% -10%,#1b2b50 0%,transparent 60%),var(--bg);color:var(--text);font:14px/1.45 Inter,Segoe UI,Arial,sans-serif}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 28px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#0b1020ed;backdrop-filter:blur(14px);z-index:5}
+.brand{display:flex;gap:12px;align-items:center}.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#89a7ff,#7359de);display:grid;place-items:center;color:white;font-weight:800;font-size:18px}.brand h1{font-size:18px;margin:0;letter-spacing:.3px}.brand p{margin:2px 0 0;color:var(--muted);font-size:12px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}button,input,select{font:inherit}button{cursor:pointer;border:1px solid var(--line);background:#17233b;color:var(--text);padding:10px 13px;border-radius:10px;font-weight:650}button:hover{border-color:#7189c9}button.primary{background:var(--accent);border-color:var(--accent);color:#081126}button:disabled{opacity:.45;cursor:not-allowed}
+main{max-width:1400px;margin:auto;padding:24px 28px 40px}.notice{border:1px solid #66512e;background:#241e15;color:#f6d7a3;border-radius:12px;padding:12px 15px;margin-bottom:20px}.notice strong{color:#ffe5b6}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}.stat,.panel{background:linear-gradient(180deg,#121d32,#10182a);border:1px solid var(--line);border-radius:15px}.stat{padding:16px}.stat .label{color:var(--muted);font-size:12px}.stat .num{font-size:27px;font-weight:750;margin-top:6px}.stat .sub{color:var(--muted);font-size:11px;margin-top:2px}
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:18px 0}.search{flex:1;min-width:210px}.search input{width:100%}input,select{background:#0b1426;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:11px 12px;outline:none}input:focus,select:focus{border-color:var(--accent)}
+.content{display:grid;grid-template-columns:320px minmax(0,1fr);gap:16px}.panel{overflow:hidden}.panelhead{padding:16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px}.panelhead h2{font-size:14px;margin:0}.panelhead span{font-size:11px;color:var(--muted)}.accountlist{max-height:600px;overflow:auto}.account{padding:13px 15px;border-bottom:1px solid #202c43;cursor:pointer}.account:hover,.account.active{background:#1a2944}.accounttop{display:flex;justify-content:space-between;gap:8px}.email{font-weight:650;overflow-wrap:anywhere}.status{font-size:10px;color:var(--green);white-space:nowrap}.accountmeta{font-size:11px;color:var(--muted);margin-top:5px}.empty{padding:28px 18px;text-align:center;color:var(--muted)}
+.messages{min-width:0}.message{padding:15px 17px;border-bottom:1px solid #202c43;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px}.message:last-child{border-bottom:0}.sender{font-weight:700}.subject{margin-top:4px}.snippet{font-size:12px;color:var(--muted);margin-top:5px;overflow-wrap:anywhere}.when{font-size:11px;color:var(--muted);text-align:right;white-space:nowrap}.otp{display:inline-flex;align-items:center;gap:10px;margin-top:10px;padding:7px 9px;border:1px solid #315a50;background:#102a28;border-radius:9px}.code{font-size:19px;font-weight:800;letter-spacing:2px;color:#8af0c7;font-variant-numeric:tabular-nums}.smallbtn{font-size:11px;padding:6px 8px;border-radius:7px}.tag{display:inline-block;font-size:10px;padding:3px 7px;border-radius:20px;background:#263652;color:#bdcfff;margin-left:6px}.emptybig{padding:70px 24px;text-align:center;color:var(--muted)}.emptybig h3{color:var(--text);font-size:18px}.footer{color:var(--muted);font-size:11px;margin-top:16px}
+.modalback{display:none;position:fixed;inset:0;background:#030711c9;z-index:20;align-items:center;justify-content:center;padding:18px}.modalback.show{display:flex}.modal{width:min(620px,100%);max-height:90vh;overflow:auto;background:#111a2e;border:1px solid var(--line);border-radius:16px;padding:22px}.modal h2{margin:0 0 8px}.modal p{color:var(--muted);font-size:13px}.field{margin:15px 0}.field label{display:block;font-size:12px;color:#b7c4dc;margin-bottom:6px}.field input{width:100%}.row{display:flex;gap:9px;flex-wrap:wrap}.steps{padding-left:19px;color:#c6d2e8;font-size:13px}.steps li{margin:7px 0}.danger{color:#ffb5bd}
+@media(max-width:850px){header{padding:16px;align-items:flex-start;flex-direction:column}main{padding:16px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.content{grid-template-columns:1fr}.accountlist{max-height:300px}.message{grid-template-columns:1fr}.when{text-align:left}}
+@media(max-width:420px){.stats{gap:8px}.stat{padding:12px}.stat .num{font-size:23px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="logo">O</div><div><h1>OTP DESK</h1><p>Private Gmail verification dashboard</p></div></div>
+  <div class="actions"><button id="setupBtn">Google API setup</button><button id="connectBtn" class="primary">＋ Connect Gmail</button></div>
+</header>
+<main>
+  <div class="notice"><strong>Setup required:</strong> this dashboard is a secure starter UI. To read real Gmail messages, add your own Google OAuth Client ID and enable the Gmail API. It never asks for or stores your Gmail password.</div>
+  <section class="stats">
+    <div class="stat"><div class="label">CONNECTED ACCOUNTS</div><div class="num" id="accountCount">0</div><div class="sub">Authorized in this browser session</div></div>
+    <div class="stat"><div class="label">OTP MESSAGES</div><div class="num" id="otpCount">0</div><div class="sub">Detected in loaded messages</div></div>
+    <div class="stat"><div class="label">MESSAGES LOADED</div><div class="num" id="messageCount">0</div><div class="sub">Up to 5 per account</div></div>
+    <div class="stat"><div class="label">LAST REFRESH</div><div class="num" id="lastRefresh" style="font-size:18px">—</div><div class="sub" id="refreshState">Not connected</div></div>
+  </section>
+  <div class="toolbar">
+    <div class="search"><input id="search" placeholder="Search email, sender, subject or OTP…"></div>
+    <select id="filter"><option value="all">All messages</option><option value="otp">OTP only</option><option value="nootp">No OTP detected</option></select>
+    <button id="refreshBtn">↻ Refresh</button><button id="demoBtn">Load demo</button>
+  </div>
+  <section class="content">
+    <div class="panel">
+      <div class="panelhead"><h2>Gmail accounts</h2><span id="accountCountLabel">0 accounts</span></div>
+      <div class="accountlist" id="accountList"><div class="empty">No accounts connected yet.<br>Use “Connect Gmail” to authorize an account.</div></div>
+    </div>
+    <div class="panel messages">
+      <div class="panelhead"><h2 id="messageTitle">Latest messages</h2><span>Latest 5 per account</span></div>
+      <div id="messages"><div class="emptybig"><h3>Your OTP inbox, in one place</h3><p>Connect a Gmail account or load the demo to preview the dashboard.</p></div></div>
+    </div>
+  </section>
+  <div class="footer">Privacy note: access tokens stay in memory and are not saved to localStorage. Reconnect accounts when Google access expires. Use only accounts you own or are authorized to access.</div>
+</main>
+<div class="modalback" id="setupModal">
+  <div class="modal">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2>Connect Google Gmail API</h2><button id="closeSetup">✕</button></div>
+    <p>One-time setup for your own Google Cloud project. This starter uses Google OAuth in the browser and Gmail read-only access; it does not use email/password login.</p>
+    <ol class="steps">
+      <li>Open <a href="https://console.cloud.google.com/" target="_blank" rel="noreferrer">Google Cloud Console</a> and create/select a project.</li>
+      <li>Enable <b>Gmail API</b> in APIs & Services → Library.</li>
+      <li>Configure OAuth consent screen. While in testing, add your Google accounts as test users if required.</li>
+      <li>Create an OAuth Client ID of type <b>Web application</b>. Add this page's origin to Authorized JavaScript origins. For a local file, OAuth may reject the origin; serve the file from localhost instead.</li>
+      <li>Paste the Client ID below. This value is public by design; never paste a client secret here.</li>
+    </ol>
+    <div class="field"><label for="clientId">Google OAuth Client ID</label><input id="clientId" placeholder="1234567890-abc...apps.googleusercontent.com" autocomplete="off"></div>
+    <div class="row"><button class="primary" id="saveClient">Save for this session</button><button id="clearClient">Clear</button></div>
+    <p class="danger">Important: Google may require verification or impose OAuth/testing limits for a large number of accounts. 100+ accounts may not be practical in a browser-only app. Never enter Gmail passwords into a third-party dashboard.</p>
+  </div>
+</div>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  let clientId = sessionStorage.getItem('otpdesk_client_id') || '';
+  let tokenClient = null, accessToken = null, accounts = [], activeAccount = 'all', demoMode = false, refreshTimer = null;
+  const scopes = 'https://www.googleapis.com/auth/gmail.readonly';
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const decode = s => { try { return decodeURIComponent(escape(atob((s||'').replace(/-/g,'+').replace(/_/g,'/')))); } catch { try { return atob((s||'').replace(/-/g,'+').replace(/_/g,'/')); } catch { return ''; } } };
+  function getHeader(headers, name){return (headers||[]).find(h=>h.name.toLowerCase()===name.toLowerCase())?.value||'';}
+  function extractOtp(text){
+    const patterns=[
+      /(?:verification|security|one[- ]time|login|confirmation|authentication)\s*(?:code|otp|passcode)?\s*(?:is|:|-)?\s*([0-9]{4,8})/i,
+      /\b(?:OTP|PIN)\s*(?:is|:|-)?\s*([A-Z0-9]{4,8})\b/i,
+      /\b([0-9]{6})\b/
+    ];
+    for(const re of patterns){const m=text.match(re); if(m) return m[1];}
+    return '';
+  }
+  async function gmail(path){
+    const r=await fetch('https://gmail.googleapis.com/gmail/v1/users/me/'+path,{headers:{Authorization:'Bearer '+accessToken}});
+    if(!r.ok){let msg='Gmail API error '+r.status;try{msg=(await r.json()).error?.message||msg}catch{};throw new Error(msg);}
+    return r.json();
+  }
+  function loadGoogleScript(){
+    return new Promise((resolve,reject)=>{
+      if(window.google?.accounts?.oauth2){resolve();return;}
+      const s=document.createElement('script');s.src='https://accounts.google.com/gsi/client';s.onload=resolve;s.onerror=()=>reject(new Error('Could not load Google sign-in library. Check your internet connection.'));document.head.appendChild(s);
+    });
+  }
+  async function connect(){
+    if(!clientId){$('setupModal').classList.add('show');$('clientId').value=clientId;return;}
+    try{
+      $('refreshState').textContent='Loading Google sign-in…';
+      await loadGoogleScript();
+      tokenClient=google.accounts.oauth2.initTokenClient({client_id:clientId,scope:scopes,callback: async response=>{
+        if(response.error){$('refreshState').textContent='Authorization failed';alert('Google authorization failed: '+response.error);return;}
+        accessToken=response.access_token;
+        try{
+          const profile=await gmail('profile');
+          let acc=accounts.find(a=>a.email===profile.emailAddress);
+          if(!acc){acc={email:profile.emailAddress,token:accessToken,messages:[],historyId:profile.historyId};accounts.push(acc);}else{acc.token=accessToken;}
+          // This app keeps one short-lived access token at a time. Refreshing another account requires reconnecting it.
+          render(); await loadMessages(acc); render();
+          $('refreshState').textContent='Connected: '+acc.email;
+        }catch(e){alert('Could not read Gmail: '+e.message);$('refreshState').textContent='Could not load mail';}
+      },error_callback:e=>{alert('Google sign-in error: '+(e.message||e.type));}});
+      tokenClient.requestAccessToken({prompt:'consent'});
+    }catch(e){alert(e.message);}
+  }
+  async function loadMessages(acc){
+    const old=accessToken; accessToken=acc.token;
+    try{
+      const list=await gmail('messages?maxResults=5');
+      const rows=[];
+      for(const item of (list.messages||[])){
+        const m=await gmail('messages/'+item.id+'?format=full');
+        const headers=m.payload?.headers||[];
+        let parts=[];
+        function walk(p){if(!p)return;if(p.body?.data)parts.push(decode(p.body.data));(p.parts||[]).forEach(walk);}
+        walk(m.payload);
+        const body=parts.join('\n').slice(0,12000);
+        const subject=getHeader(headers,'Subject');
+        const from=getHeader(headers,'From');
+        const date=getHeader(headers,'Date');
+        const combined=subject+'\n'+body;
+        rows.push({id:item.id,email:acc.email,subject,from,date,body:body.slice(0,800),otp:extractOtp(combined),snippet:m.snippet||''});
+      }
+      acc.messages=rows; acc.lastLoaded=new Date().toISOString();
+    }finally{accessToken=old;}
+  }
+  async function refreshAll(){
+    if(demoMode){render();return;}
+    if(!accounts.length){$('refreshState').textContent='No accounts connected';return;}
+    $('refreshState').textContent='Refreshing…';
+    let ok=0, failed=0;
+    for(const acc of accounts){try{await loadMessages(acc);ok++;}catch(e){failed++;}}
+    $('lastRefresh').textContent=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    $('refreshState').textContent=`Updated ${ok} · Failed ${failed}`;
+    render();
+  }
+  function render(){
+    const all=accounts.flatMap(a=>a.messages||[]);
+    const q=$('search').value.trim().toLowerCase(), f=$('filter').value;
+    $('accountCount').textContent=accounts.length;
+    $('accountCountLabel').textContent=accounts.length+' account'+(accounts.length===1?'':'s');
+    $('messageCount').textContent=all.length;
+    $('otpCount').textContent=all.filter(m=>m.otp).length;
+    const list=$('accountList');
+    if(!accounts.length){list.innerHTML='<div class="empty">No accounts connected yet.<br>Use “Connect Gmail” to authorize an account.</div>';}
+    else list.innerHTML='<div class="account '+(activeAccount==='all'?'active':'')+'" data-email="all"><div class="accounttop"><span class="email">All accounts</span><span class="status">'+all.length+' mails</span></div><div class="accountmeta">Show messages across connected accounts</div></div>'+accounts.map(a=>`<div class="account ${activeAccount===a.email?'active':''}" data-email="${esc(a.email)}"><div class="accounttop"><span class="email">${esc(a.email)}</span><span class="status">Connected</span></div><div class="accountmeta">${(a.messages||[]).length} recent messages</div></div>`).join('');
+    list.querySelectorAll('.account').forEach(el=>el.onclick=()=>{activeAccount=el.dataset.email;render();});
+    let filtered=all.filter(m=>(activeAccount==='all'||m.email===activeAccount)&&(!q||[m.email,m.subject,m.from,m.otp,m.snippet,m.body].join(' ').toLowerCase().includes(q))&&(f==='all'||(f==='otp'?!!m.otp:!m.otp)));
+    filtered.sort((a,b)=>new Date(b.date)-new Date(a.date));
+    $('messageTitle').textContent=activeAccount==='all'?'Latest messages':activeAccount;
+    const box=$('messages');
+    if(!filtered.length){box.innerHTML='<div class="emptybig"><h3>No matching messages</h3><p>Try another search, connect an account, or refresh.</p></div>';return;}
+    box.innerHTML=filtered.map(m=>`<article class="message"><div><div class="sender">${esc(m.from||m.email)} <span class="tag">${esc(m.email)}</span></div><div class="subject">${esc(m.subject||'(No subject)')}</div><div class="snippet">${esc(m.snippet||m.body||'')}</div>${m.otp?`<div class="otp"><span class="code">${esc(m.otp)}</span><button class="smallbtn" data-copy="${esc(m.otp)}">Copy code</button></div>`:''}</div><div class="when">${esc(m.date?new Date(m.date).toLocaleString(): '')}</div></article>`).join('');
+    box.querySelectorAll('[data-copy]').forEach(b=>b.onclick=async()=>{try{await navigator.clipboard.writeText(b.dataset.copy);b.textContent='Copied';setTimeout(()=>b.textContent='Copy code',1200)}catch{alert('Clipboard permission denied. Code: '+b.dataset.copy)}});
+  }
+  function demo(){
+    demoMode=true;accounts=[
+      {email:'study.account@gmail.com',messages:[
+        {email:'study.account@gmail.com',from:'Example Service <no-reply@example.com>',subject:'Your verification code',date:new Date().toISOString(),snippet:'Use this code to verify your sign-in.',body:'Your verification code is 482913. Do not share it.',otp:'482913'},
+        {email:'study.account@gmail.com',from:'Example App <security@example.net>',subject:'Sign-in confirmation',date:new Date(Date.now()-3600000).toISOString(),snippet:'A sign-in attempt needs confirmation.',body:'Confirmation code: 7314',otp:'7314'}]},
+      {email:'another.account@gmail.com',messages:[
+        {email:'another.account@gmail.com',from:'Demo Platform <login@example.org>',subject:'Login code',date:new Date(Date.now()-7200000).toISOString(),snippet:'Your one-time password is ready.',body:'Your one-time password is 906255',otp:'906255'}]}
+    ];activeAccount='all';$('refreshState').textContent='Demo data — not real Gmail';$('lastRefresh').textContent='DEMO';render();
+  }
+  $('connectBtn').onclick=()=>{demoMode=false;connect();};
+  $('setupBtn').onclick=()=>{$('clientId').value=clientId;$('setupModal').classList.add('show');};
+  $('closeSetup').onclick=()=>$('setupModal').classList.remove('show');
+  $('saveClient').onclick=()=>{clientId=$('clientId').value.trim();if(!clientId){alert('Enter a Google OAuth Client ID first.');return;}sessionStorage.setItem('otpdesk_client_id',clientId);$('setupModal').classList.remove('show');alert('Client ID saved for this browser session. Click “Connect Gmail” to authorize an account.');};
+  $('clearClient').onclick=()=>{clientId='';sessionStorage.removeItem('otpdesk_client_id');$('clientId').value='';};
+  $('refreshBtn').onclick=refreshAll;$('demoBtn').onclick=demo;
+  $('search').addEventListener('input',render);$('filter').addEventListener('change',render);
+  // Gentle polling: refresh every 60 seconds while this page is open.
+  refreshTimer=setInterval(()=>{if(accounts.length&&!demoMode)refreshAll();},60000);
+  if(clientId)$('refreshState').textContent='Client ID configured — connect an account';
+})();
+</script>
+</body>
+</html>
